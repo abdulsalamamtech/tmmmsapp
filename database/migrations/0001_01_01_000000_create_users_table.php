@@ -13,15 +13,20 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('name')->nullable();
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->enum('role', ['administrator', 'refinery', 'marketer', 'transporter', 'driver'])->default('');
+            $table->string('phone_number');
+            $table->text('address')->nullable();
+            $table->string('city')->nullable();
+            $table->string('state')->nullable();
+            $table->string('country')->default('Nigeria');
             $table->rememberToken();
             $table->timestamps();
 
             // Role and who assign the role
-            $table->enum('role', ['user', 'moderator', 'admin', 'super-admin'])->default('user');
             $table->foreignId('assigned_by')->nullable()->constrained('users')->nullOnDelete();
             // Soft delete
             $table->softDeletes();

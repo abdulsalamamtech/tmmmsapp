@@ -9,6 +9,9 @@ use App\Http\Controllers\Api\Auth\NewPasswordController;
 use App\Http\Controllers\Api\Auth\PasswordController;
 use App\Http\Controllers\Api\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Api\Auth\VerifyEmailController;
+use App\Http\Controllers\Api\Register\MarketerRegister;
+use App\Http\Controllers\Api\Register\RefineryRegister;
+use App\Http\Controllers\Api\Register\TransporterRegister;
 use Illuminate\Support\Facades\Route;
 
 
@@ -94,3 +97,15 @@ Route::middleware('auth:sanctum')->group(function () {
 
 
 
+
+
+Route::middleware('guest')->group(function () {
+    Route::prefix('register')->group( function () {
+        // Refinery
+        Route::post('/refinery', [RefineryRegister::class, 'register']);
+        // Marketer
+        Route::post('/marketer', [MarketerRegister::class, 'register']);
+        // Transporter
+        Route::post('/transporter', [TransporterRegister::class, 'register']);
+    });
+});

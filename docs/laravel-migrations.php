@@ -31,7 +31,7 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('name')->nullable();
             $table->string('email')->unique();
             $table->string('password');
             $table->enum('role', ['administrator', 'refinery', 'marketer', 'transporter', 'driver']);
@@ -72,27 +72,7 @@ return new class extends Migration
 //     }
 // };
 
-// database/migrations/2024_01_10_000004_create_activities_table.php
-return new class extends Migration
-{
-    public function up()
-    {
-        Schema::create('activities', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->string('role');
-            $table->text('description');
-            $table->json('logs');
-            $table->timestamps();
-            $table->softDeletes();
-        });
-    }
 
-    public function down()
-    {
-        Schema::dropIfExists('activities');
-    }
-};
 
 // database/migrations/2024_01_10_000005_create_assets_table.php
 return new class extends Migration
@@ -120,6 +100,55 @@ return new class extends Migration
     }
 };
 
+
+
+// database/migrations/2024_01_10_000004_create_activities_table.php
+return new class extends Migration
+{
+    public function up()
+    {
+        Schema::create('activities', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->text('description')->nullable();
+            $table->json('logs')->nullable();
+            $table->timestamps();
+            $table->softDeletes();
+        });
+    }
+
+    public function down()
+    {
+        Schema::dropIfExists('activities');
+    }
+};
+
+
+
+// database/migrations/2024_01_10_000007_create_admin_departments_table.php
+return new class extends Migration
+{
+    public function up()
+    {
+        Schema::create('admin_departments', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('added_by')->constrained('users')->onDelete('cascade');
+            $table->string('role');
+            $table->text('responsibility_description')->nullable();
+            $table->string('zone')->nullable();
+            $table->string('state')->nullable();
+            $table->timestamps();
+            $table->softDeletes();
+        });
+    }
+
+    public function down()
+    {
+        Schema::dropIfExists('admin_departments');
+    }
+};
+
 // database/migrations/2024_01_10_000006_create_refineries_table.php
 return new class extends Migration
 {
@@ -127,7 +156,7 @@ return new class extends Migration
     {
         Schema::create('refineries', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->string('license_number')->unique();
             $table->json('license_details')->nullable();
             $table->text('description')->nullable();
@@ -144,6 +173,35 @@ return new class extends Migration
 };
 
 
+// database/migrations/2024_01_10_000007_create_refinery_departments_table.php
+return new class extends Migration
+{
+    public function up()
+    {
+        Schema::create('refinery_departments', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('refinery_id')->constrained('refineries')->onDelete('cascade');
+            $table->foreignId('added_by')->constrained('users')->onDelete('cascade');
+            $table->string('role');
+            $table->text('responsibility_description')->nullable();
+            $table->string('zone')->nullable();
+            $table->string('state')->nullable();
+            $table->timestamps();
+            $table->softDeletes();
+        });
+    }
+
+    public function down()
+    {
+        Schema::dropIfExists('refinery_departments');
+    }
+};
+
+
+
+
+
 // database/migrations/2024_01_10_000017_create_exchange_rates_table.php
 return new class extends Migration
 {
@@ -151,7 +209,7 @@ return new class extends Migration
     {
         Schema::create('exchange_rates', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('refinery_id')->constrained()->onDelete('cascade');
+            $table->foreignId('refinery_id')->constrained('refineries')->onDelete('cascade');
             $table->decimal('naira', 15, 2);
             $table->decimal('dollar', 15, 2);
             $table->foreignId('added_by')->constrained('users')->onDelete('cascade');
@@ -163,31 +221,6 @@ return new class extends Migration
     public function down()
     {
         Schema::dropIfExists('exchange_rates');
-    }
-};
-
-
-// database/migrations/2024_01_10_000007_create_refinery_departments_table.php
-return new class extends Migration
-{
-    public function up()
-    {
-        Schema::create('refinery_departments', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->foreignId('refinery_id')->constrained()->onDelete('cascade');
-            $table->string('role');
-            $table->text('responsibilities_description')->nullable();
-            $table->string('zone')->nullable();
-            $table->string('state')->nullable();
-            $table->timestamps();
-            $table->softDeletes();
-        });
-    }
-
-    public function down()
-    {
-        Schema::dropIfExists('refinery_departments');
     }
 };
 
@@ -208,9 +241,10 @@ return new class extends Migration
     {
         Schema::create('marketers', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->string('license_number')->unique();
             $table->json('license_details');
+            $table->text('description')->nullable();
             $table->enum('status', ['pending', 'verified', 'rejected'])->default('pending');
             $table->timestamps();
             $table->softDeletes();
@@ -232,8 +266,8 @@ return new class extends Migration
     {
         Schema::create('marketer_departments', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->foreignId('marketer_id')->constrained()->onDelete('cascade');
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('marketer_id')->constrained('marketers')->onDelete('cascade');
             $table->string('role');
             $table->text('responsibilities_description')->nullable();
             $table->timestamps();
@@ -255,9 +289,9 @@ return new class extends Migration
     {
         Schema::create('marketer_accounts', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('refinery_id')->constrained()->onDelete('cascade');
-            $table->foreignId('marketer_id')->constrained()->onDelete('cascade');
-            $table->enum('accounts_type', ['dprp', 'dogcl']);
+            $table->foreignId('refinery_id')->constrained('refineries')->onDelete('cascade');
+            $table->foreignId('marketer_id')->constrained('marketers')->onDelete('cascade');
+            $table->enum('accounts_type', ['dprp', 'dogcl'])->default('dprp');
             $table->decimal('amount', 15, 2)->default(0);
             $table->decimal('credit', 15, 2)->default(0);
             $table->decimal('debit', 15, 2)->default(0);
@@ -273,6 +307,28 @@ return new class extends Migration
 };
 
 
+
+// database/migrations/2024_01_10_000015_create_marketer_account_transactions_table.php
+return new class extends Migration
+{
+    public function up()
+    {
+        Schema::create('marketer_account_transactions', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('marketer_account_id')->constrained('marketer_accounts')->onDelete('cascade');
+            $table->enum('transaction_type', ['credit', 'debit']);
+            $table->decimal('amount', 15, 2);
+            $table->text('description')->nullable();
+            $table->enum('status', ['pending', 'completed', 'failed'])->default('pending');
+            $table->timestamps();
+            $table->softDeletes();
+        });
+    }
+
+};
+
+
+
 // database/migrations/2024_01_10_000010_create_transporters_table.php
 return new class extends Migration
 {
@@ -280,9 +336,10 @@ return new class extends Migration
     {
         Schema::create('transporters', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->string('license_number')->unique();
             $table->json('license_details')->nullable();
+            $table->text('description')->nullable();
             $table->enum('status', ['pending', 'verified', 'rejected'])->default('pending');
             $table->timestamps();
             $table->softDeletes();
@@ -295,6 +352,8 @@ return new class extends Migration
     }
 };
 
+
+
 // database/migrations/2024_01_10_000011_create_transporter_departments_table.php
 return new class extends Migration
 {
@@ -302,8 +361,8 @@ return new class extends Migration
     {
         Schema::create('transporter_departments', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->foreignId('transporter_id')->constrained()->onDelete('cascade');
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('transporter_id')->constrained('transporters')->onDelete('cascade');
             $table->string('role');
             $table->text('responsibilities_description')->nullable();
             $table->timestamps();
@@ -317,6 +376,8 @@ return new class extends Migration
     }
 };
 
+
+
 // database/migrations/2024_01_10_000012_create_drivers_table.php
 return new class extends Migration
 {
@@ -326,15 +387,15 @@ return new class extends Migration
             $table->id();
             $table->foreignId('added_by')->constrained('users')->onDelete('cascade');
             $table->foreignId('transporter_id')->constrained('transporters')->onDelete('cascade');
-            $table->string('first_name');
-            $table->string('last_name');
+            $table->string('first_name')->nullable();
+            $table->string('last_name')->nullable();
             $table->string('other_name')->nullable();
             $table->string('email')->unique()->nullable();
             $table->string('phone_number')->unique();
             $table->string('license_number')->unique();
             $table->json('license_details');
-            $table->text('address');
-            $table->string('state');
+            $table->text('address')->nullable();
+            $table->string('state')->nullable();
             $table->string('country')->default('Nigeria');
             $table->enum('status', ['pending', 'verified', 'rejected'])->default('pending');
             $table->enum('movement_status', ['pending', 'assigned'])->default('pending');
@@ -356,16 +417,16 @@ return new class extends Migration
     {
         Schema::create('trucks', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('driver_id')->nullable()->constrained()->onDelete('set null');
+            $table->foreignId('driver_id')->nullable()->constrained('drivers')->onDelete('set null');
             $table->foreignId('added_by')->constrained('users')->onDelete('cascade');
-            $table->string('name');
+            $table->string('name')->nullable();
             $table->text('description')->nullable();
             $table->string('truck_number')->unique();
             $table->decimal('quantity', 10, 2);
             $table->integer('compartment')->default(3);
-            $table->decimal('calibrate_one', 10, 2);
-            $table->decimal('calibrate_two', 10, 2);
-            $table->decimal('calibrate_three', 10, 2);
+            $table->decimal('calibrate_one', 10, 2)->nullable();
+            $table->decimal('calibrate_two', 10, 2)->nullable();
+            $table->decimal('calibrate_three', 10, 2)->nullable();
             $table->enum('status', ['pending', 'verified', 'rejected'])->default('pending');
             $table->enum('movement_status', ['pending', 'assigned'])->default('pending');
             $table->timestamps();
@@ -379,6 +440,8 @@ return new class extends Migration
     }
 };
 
+
+
 // database/migrations/2024_01_10_000014_create_virtual_accounts_table.php
 return new class extends Migration
 {
@@ -386,7 +449,7 @@ return new class extends Migration
     {
         Schema::create('virtual_accounts', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->enum('belongs_to', ['marketer', 'transporter', 'driver']);
             $table->decimal('balance', 15, 2)->default(0);
             $table->string('bank');
@@ -406,6 +469,7 @@ return new class extends Migration
     }
 };
 
+
 // database/migrations/2024_01_10_000015_create_virtual_account_transactions_table.php
 return new class extends Migration
 {
@@ -416,8 +480,8 @@ return new class extends Migration
             $table->foreignId('virtual_account_id')->constrained()->onDelete('cascade');
             $table->enum('transaction_type', ['credit', 'debit']);
             $table->decimal('amount', 15, 2);
-            $table->text('description');
-            $table->enum('status', ['pending', 'completed', 'failed']);
+            $table->text('description')->nullable();
+            $table->enum('status', ['pending', 'completed', 'failed'])->default('pending');
             $table->timestamps();
             $table->softDeletes();
         });
@@ -486,7 +550,7 @@ return new class extends Migration
         Schema::create('products', function (Blueprint $table) {
             $table->id();
             $table->foreignId('product_type_id')->constrained('product_types')->onDelete('cascade');
-            $table->foreignId('refinery_id')->constrained()->onDelete('cascade');
+            $table->foreignId('refinery_id')->constrained('refineries')->onDelete('cascade');
             $table->decimal('price', 15, 2);
             $table->foreignId('added_by')->constrained('users')->onDelete('cascade');
             $table->enum('status', ['pending', 'active'])->default('pending');
@@ -556,7 +620,7 @@ return new class extends Migration
     {
         Schema::create('purchase_payment_proofs', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('purchase_id')->constrained()->onDelete('cascade');
+            $table->foreignId('purchase_id')->constrained('purchases')->onDelete('cascade');
             $table->foreignId('marketer_id')->constrained('marketers')->onDelete('cascade');
             $table->foreignId('asset_id')->constrained('assets')->onDelete('cascade');
             $table->string('bank_name');
