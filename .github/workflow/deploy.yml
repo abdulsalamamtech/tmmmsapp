@@ -3,7 +3,7 @@ name: Deploy to Laravel App to Server
 on:
   push:
     branches:
-      - dev
+      - main
 
 jobs:
   deploy:
