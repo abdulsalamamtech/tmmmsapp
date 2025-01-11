@@ -377,6 +377,35 @@ return new class extends Migration
 };
 
 
+// database/migrations/2024_01_10_000012_create_customers_table.php
+return new class extends Migration
+{
+    public function up()
+    {
+        Schema::create('customers', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('added_by')->constrained('users')->onDelete('cascade');
+            $table->foreignId('marketer_id')->constrained('marketers')->onDelete('cascade');
+            $table->string('first_name')->nullable();
+            $table->string('last_name')->nullable();
+            $table->string('other_name')->nullable();
+            $table->string('email')->unique()->nullable();
+            $table->string('phone_number')->unique();
+            $table->text('address')->nullable();
+            $table->string('state')->nullable();
+            $table->string('country')->default('Nigeria');
+            $table->enum('status', ['pending', 'verified', 'rejected'])->default('pending');
+            $table->timestamps();
+            $table->softDeletes();
+        });
+    }
+
+    public function down()
+    {
+        Schema::dropIfExists('customers');
+    }
+};
+
 
 // database/migrations/2024_01_10_000012_create_drivers_table.php
 return new class extends Migration
@@ -390,13 +419,8 @@ return new class extends Migration
             $table->string('first_name')->nullable();
             $table->string('last_name')->nullable();
             $table->string('other_name')->nullable();
-            $table->string('email')->unique()->nullable();
-            $table->string('phone_number')->unique();
             $table->string('license_number')->unique();
             $table->json('license_details');
-            $table->text('address')->nullable();
-            $table->string('state')->nullable();
-            $table->string('country')->default('Nigeria');
             $table->enum('status', ['pending', 'verified', 'rejected'])->default('pending');
             $table->enum('movement_status', ['pending', 'assigned'])->default('pending');
             $table->timestamps();
