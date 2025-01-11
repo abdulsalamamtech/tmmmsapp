@@ -22,7 +22,7 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST_IP }} << 'EOF'
             cd htdocs/dev.domain.com  # Navigate to the staging folder
-            git pull origin dev  # Pull the latest changes from dev branch
+            git pull origin main  # Pull the latest changes from dev branch
             npm install  # Install dependencies
             rm -rf .next  # Remove the existing .next folder
             export NEXT_PUBLIC_BASE_URL=https://test.domain.com/api  # Set environment variable
