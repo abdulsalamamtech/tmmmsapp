@@ -18,7 +18,7 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->enum('role', ['administrator', 'refinery', 'marketer', 'transporter', 'driver'])->default('');
-            $table->string('phone_number');
+            $table->string('phone_number')->nullable();
             $table->text('address')->nullable();
             $table->string('city')->nullable();
             $table->string('state')->nullable();
