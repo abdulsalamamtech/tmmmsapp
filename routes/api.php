@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\URL;
 Route::get('/', function () {
     return [
         'message' => 'Welcome to the API!',
-        'documentation_url' => url() . '/docs/api',
+        'documentation_url' => url('/') . '/docs/api',
         'contact_email' => 'abdulsalamamtech@gmail.com',
         'terms_of_service_url' => URL::current().'terms-of-service',
         'privacy_policy_url' => URL::current().'privacy-policy',
