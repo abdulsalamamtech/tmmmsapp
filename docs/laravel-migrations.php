@@ -234,7 +234,6 @@ return new class extends Migration
 
 
 // database/migrations/2024_01_10_000008_create_marketers_table.php
-
 return new class extends Migration
 {
     public function up()
@@ -269,7 +268,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('marketer_id')->constrained('marketers')->onDelete('cascade');
             $table->string('role');
-            $table->text('responsibilities_description')->nullable();
+            $table->text('responsibility_description')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
@@ -315,6 +314,8 @@ return new class extends Migration
     {
         Schema::create('marketer_account_transactions', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('refinery_id')->constrained('refineries')->onDelete('cascade');
+            $table->foreignId('marketer_id')->constrained('marketers')->onDelete('cascade');
             $table->foreignId('marketer_account_id')->constrained('marketer_accounts')->onDelete('cascade');
             $table->enum('transaction_type', ['credit', 'debit']);
             $table->decimal('amount', 15, 2);
@@ -364,7 +365,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('transporter_id')->constrained('transporters')->onDelete('cascade');
             $table->string('role');
-            $table->text('responsibilities_description')->nullable();
+            $table->text('responsibility_description')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
@@ -481,7 +482,7 @@ return new class extends Migration
             $table->enum('currency', ['USD', 'NGN'])->default('NGN');
             $table->decimal('daily_limit', 15, 2)->nullable();
             $table->decimal('monthly_limit', 15, 2)->nullable();
-            $table->string('security_pin');
+            $table->string('security_pin', 4)->default('1234');
             $table->timestamps();
             $table->softDeletes();
         });
@@ -589,6 +590,7 @@ return new class extends Migration
     }
 };
 
+
 // database/migrations/2024_01_10_000021_create_purchases_table.php
 return new class extends Migration
 {
@@ -664,6 +666,7 @@ return new class extends Migration
         Schema::dropIfExists('purchase_payment_proofs');
     }
 };
+
 
 // database/migrations/2024_01_10_000024_create_programs_table.php
 return new class extends Migration
@@ -756,6 +759,7 @@ return new class extends Migration
         Schema::create('locations', function (Blueprint $table) {
             $table->id();
             $table->foreignId('program_id')->constrained('programs')->onDelete('cascade');
+            $table->foreignId('driver_id')->constrained('drivers')->onDelete('cascade');
             $table->foreignId('truck_id')->constrained('trucks')->onDelete('cascade');
             $table->decimal('longitude', 10, 7);
             $table->decimal('latitude', 10, 7);
