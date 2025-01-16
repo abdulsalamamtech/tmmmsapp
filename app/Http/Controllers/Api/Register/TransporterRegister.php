@@ -29,7 +29,7 @@ class TransporterRegister extends Controller
             $new_data['license_details'] = $data['license_number'];
             $new_data['description'] = $data['license_number'];
 
-            $refinery = Transporter::create($new_data);
+            $transporter = Transporter::create($new_data);
 
 
             // Dispatch event
@@ -44,7 +44,8 @@ class TransporterRegister extends Controller
 
             // Generate token
             $token = $user->createToken('auth_token')->plainTextToken;
-            $response = array_merge($user, $refinery);
+            $response = array_merge($user->toArray(), $transporter->toArray());
+
             // return ApiResponse::success($response, "Refinery registered successfully", 201);
 
 

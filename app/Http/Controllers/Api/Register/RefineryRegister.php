@@ -48,7 +48,7 @@ class RefineryRegister extends Controller
 
             // Generate token
             $token = $user->createToken('auth_token')->plainTextToken;
-            $response = array_merge($user, $refinery);
+            $response = array_merge($user->toArray(), $refinery->toArray());
             // return ApiResponse::success($response, "Refinery registered successfully", 201);
 
 

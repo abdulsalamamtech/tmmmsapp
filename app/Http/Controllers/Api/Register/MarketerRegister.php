@@ -29,7 +29,7 @@ class MarketerRegister extends Controller
             $new_data['license_details'] = $data['license_number'];
             $new_data['description'] = $data['license_number'];
 
-            $refinery = Marketer::create($new_data);
+            $marketer = Marketer::create($new_data);
 
 
             // Dispatch event
@@ -44,7 +44,8 @@ class MarketerRegister extends Controller
 
             // Generate token
             $token = $user->createToken('auth_token')->plainTextToken;
-            $response = array_merge($user, $refinery);
+            $response = array_merge($user->toArray(), $marketer->toArray());
+
             // return ApiResponse::success($response, "Refinery registered successfully", 201);
 
 
