@@ -11,7 +11,7 @@ class PurchaseRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,13 @@ class PurchaseRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            // 'refinery_id' => ['required', 'exists:refinery,id'],
+            // 'added_by' => ['required','integer','exists:users,id'],
+            'product_id' => ['required','integer','exists:products,id'],
+            // 'amount' => ['required','integer'],
+            'liters' => ['required','integer'],
+            // 'marketer_id' => ['required','integer','exists:users,id'],
+            // 'pfi_number',
         ];
     }
 }

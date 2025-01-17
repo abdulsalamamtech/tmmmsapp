@@ -1,7 +1,9 @@
 <?php
 
 use App\Http\Controllers\Api\Marketers\ProductController;
+use App\Http\Controllers\Api\Marketers\PurchaseController;
 use Illuminate\Support\Facades\Route;
+
 
 
 
@@ -14,6 +16,10 @@ use Illuminate\Support\Facades\Route;
         // Products
         Route::apiResource('products', ProductController::class)
         ->only(['index', 'show']);
+
+
+        // Purchase
+        Route::apiResource('purchase', PurchaseController::class);
     
         // Purchases
         // Route::get('purchases', [RefineryPurchaseController::class, 'index']);

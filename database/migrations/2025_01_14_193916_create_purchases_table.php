@@ -16,9 +16,10 @@ return new class extends Migration
             $table->foreignId('refinery_id')->constrained('refineries')->onDelete('cascade');
             $table->foreignId('marketer_id')->constrained('marketers')->onDelete('cascade');
             $table->foreignId('product_id')->constrained('products')->onDelete('cascade');
-            $table->string('pfi_number')->unique();
+            $table->foreignId('added_by')->constrained('users')->onDelete('cascade');
             $table->decimal('liters', 15, 2);
             $table->decimal('amount', 15, 2);
+            $table->string('pfi_number')->unique();
             $table->timestamps();
             $table->softDeletes();
         });
