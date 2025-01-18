@@ -11,7 +11,7 @@ class ProgramRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,8 @@ class ProgramRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'liters' => ['required', 'integer'],
+            'purchase_id' => ['required','integer','exists:purchases,id'],
         ];
     }
 }

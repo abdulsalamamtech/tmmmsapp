@@ -13,12 +13,12 @@ return new class extends Migration
     {
         Schema::create('programs', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('refinery_id')->constrained('refineries')->onDelete('cascade');
             $table->foreignId('marketer_id')->constrained('marketers')->onDelete('cascade');
             $table->foreignId('purchase_id')->constrained('purchases')->onDelete('cascade');
+            $table->decimal('liters', 15, 2);
             $table->string('atc_number')->nullable()->unique();
-            $table->enum('status', ['pending', 'approved', 'rejected', 'completed'])->default('pending');
             $table->foreignId('generated_by')->nullable()->constrained('users')->onDelete('set null')->comment('the refinery user id');
+            $table->enum('status', ['pending', 'approved', 'rejected', 'completed'])->default('pending');
             $table->text('comment')->nullable();
             $table->foreignId('added_by')->constrained('users')->onDelete('cascade');
             $table->timestamps();

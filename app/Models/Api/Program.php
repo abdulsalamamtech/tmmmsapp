@@ -11,13 +11,25 @@ class Program extends Model
     use HasFactory, SoftDeletes;
     
     protected $fillable = [
-        'refinery_id',
-        'marketer_id',
+        'marketer_id', // unique identifier
         'purchase_id',
-        'atc_number',
+        'liters',
+        'added_by',
         'status',
+        'atc_number',
         'generated_by',
         'comment',
-        'added_by'
     ];
+
+
+    public function purchase(){
+        return $this->belongsTo(Purchase::class);
+    }
+
+
+    public function marketer(){
+        return $this->belongsTo(Marketer::class);
+    }
+
+    
 }

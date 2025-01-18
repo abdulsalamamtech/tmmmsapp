@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\Marketers\PurchaseController;
 use App\Http\Controllers\Api\Refineries\ProductController;
 use Illuminate\Support\Facades\Route;
 
@@ -11,6 +12,10 @@ Route::prefix('refineries')->group(function () {
 
     // Products
     Route::apiResource('products', ProductController::class);
+
+    // Purchases
+    Route::apiResource('purchases', PurchaseController::class);
+
 
     // Purchases
     // Route::get('purchases', [RefineryPurchaseController::class, 'index']);
