@@ -11,7 +11,8 @@ class PurchaseRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        return true;        $data['added_by'] = request()?->user()?->id ?? 1;
+
     }
 
     /**
@@ -22,10 +23,9 @@ class PurchaseRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'supplier_id' => ['required','integer','exists:suppliers,id'],
-            'purchase_date' => ['required','date'],
-            'added_by' => ['required','integer','exists:users,id'],
-            'comment' => ['nullable','string','max:255']
+            // 'approved_by' => ['required','integer','exists:users,id'],
+            'comment' => ['nullable','string','max:255'],
+            'status' => ['required','in:approve,reject']
         ];
 
     }

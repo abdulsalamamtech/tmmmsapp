@@ -603,8 +603,11 @@ return new class extends Migration
             $table->foreignId('marketer_id')->constrained('marketers')->onDelete('cascade');
             $table->foreignId('added_by')->constrained('users')->onDelete('cascade');
             $table->decimal('liters', 15, 2);
+
             $table->decimal('amount', 15, 2);
             $table->string('pfi_number')->unique();
+            $table->text('comment')->nullable();
+            $table->enum('status', ['pending', 'approve', 'reject'])->default('pending');
             $table->foreignId('approved_by')->nullable()->constrained('users')->onDelete('set null')->comment('the refinery user id');
             $table->timestamps();
             $table->softDeletes();

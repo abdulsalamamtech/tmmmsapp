@@ -15,10 +15,13 @@ class Purchase extends Model
         'refinery_id',
         'marketer_id',
         'product_id',
-        'pfi_number',
         'amount',
         'liters',
+        
+        'pfi_number',
         'approved_by',
+        'comment',
+        'status',
     ];
 
     public function refinery()

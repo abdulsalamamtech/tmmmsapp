@@ -52,7 +52,7 @@ class PurchaseController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Refinery: Update the specified resource in storage.
      */
     public function update(PurchaseRequest $request, Purchase $purchase)
     {
@@ -65,6 +65,18 @@ class PurchaseController extends Controller
 
         if (!$purchase) {
             return ApiResponse::error([], 'purchase not found', 404);
+        }
+
+        if ($request->status === 'approve' && $purchase->approved_by) {
+            return ApiResponse::error([], 'purchase already approved', 400);
+        }
+
+        // Approve user purchase and send purchase payment details
+        if($request->status == 'approve'){
+            $data['approved_id'] = request()?->user()?->id ?? 1;
+
+            // Send mail to marketer with payment information
+            
         }
 
         $purchase->update($data);
