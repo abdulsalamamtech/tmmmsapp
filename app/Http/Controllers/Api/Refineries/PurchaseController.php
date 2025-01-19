@@ -4,14 +4,16 @@ namespace App\Http\Controllers\Api\Refineries;
 
 use App\Helpers\ApiResponse;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\Refineries\PurchaseRequest;
 use App\Http\Resources\PurchaseResource;
 use App\Models\Api\Purchase;
+use App\Models\Api\Refinery;
 use Illuminate\Http\Request;
 
 class PurchaseController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Refinery: Display a listing of the resource.
      */
     public function index()
     {
@@ -29,28 +31,46 @@ class PurchaseController extends Controller
         return ApiResponse::success($data, 'successful', 200, $metadata);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
 
     /**
-     * Display the specified resource.
+     * Refinery: Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Purchase $purchase)
     {
-        //
+        $refinery_id = 1;
+        // Fetch the purchase from the database
+        $purchase = Purchase::where('refinery_id', $refinery_id)
+            ->where('id', $purchase->id);
+
+        // Check if the purchase exists
+        if (!$purchase) {
+            return ApiResponse::error([], 'Purchase not found', 404);
+        }
+
+        $purchase = new PurchaseResource($purchase);
+        return ApiResponse::success($purchase, 'successful');
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(PurchaseRequest $request, Purchase $purchase)
     {
-        //
+        $refinery_id = 1;
+
+        $data = $request->validated();
+        $purchase = Purchase::where('refinery_id', $refinery_id)
+            ->where('id', $purchase->id)
+            ->first();
+
+        if (!$purchase) {
+            return ApiResponse::error([], 'purchase not found', 404);
+        }
+
+        $purchase->update($data);
+
+        $purchase = new PurchaseResource($purchase);
+        return ApiResponse::success($purchase, 'purchase updated', 200);
     }
 
     /**

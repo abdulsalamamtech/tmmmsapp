@@ -1,8 +1,9 @@
 <?php
 
-use App\Http\Controllers\Api\Marketers\PurchaseController;
 use App\Http\Controllers\Api\Refineries\ProductController;
+use App\Http\Controllers\Api\Refineries\PurchaseController;
 use Illuminate\Support\Facades\Route;
+
 
 
 

@@ -17,7 +17,8 @@ class Purchase extends Model
         'product_id',
         'pfi_number',
         'amount',
-        'liters'
+        'liters',
+        'approved_by',
     ];
 
     public function refinery()

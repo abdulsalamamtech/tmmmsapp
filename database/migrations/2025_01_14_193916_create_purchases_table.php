@@ -20,6 +20,7 @@ return new class extends Migration
             $table->decimal('liters', 15, 2);
             $table->decimal('amount', 15, 2);
             $table->string('pfi_number')->nullable()->unique();
+            $table->foreignId('approved_by')->nullable()->constrained('users')->onDelete('set null')->comment('the refinery user id');
             $table->timestamps();
             $table->softDeletes();
         });

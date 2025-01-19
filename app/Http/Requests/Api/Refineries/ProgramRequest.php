@@ -22,19 +22,9 @@ class ProgramRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required','string','max:255'],
-            'description' => ['nullable','string','max:255'],
-            'refinery_id' => ['required','integer','exists:refineries,id'],
-            'added_by' => ['required','integer','exists:users,id'],
-            'marketer_id' => ['required','integer','exists:marketers,id'],
-            'purchase_id' => ['required','integer','exists:purchases,id'],
-            'atc_number' => ['required','string', 'unique:purchase,atc_number'],
-            'status' => ['nullable'],
-            'generated_by' => ['nullable','integer', 'exists:users,id'],
-            'comment' => ['nullable'],
-            // 'start_date' => ['required','date'],
-            // 'end_date' => ['required','date','after:start_date'],
-            // 'image' => ['nullable','image','mimes:jpeg,png,jpg']
+            // 'pending', 'approved', 'rejected', 'completed'
+            'status' => ['required','in:approved,rejected'],
+            'comment' => ['nullable', 'max:255'],
         ];
     }
 }

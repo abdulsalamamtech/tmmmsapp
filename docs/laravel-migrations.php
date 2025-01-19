@@ -605,6 +605,7 @@ return new class extends Migration
             $table->decimal('liters', 15, 2);
             $table->decimal('amount', 15, 2);
             $table->string('pfi_number')->unique();
+            $table->foreignId('approved_by')->nullable()->constrained('users')->onDelete('set null')->comment('the refinery user id');
             $table->timestamps();
             $table->softDeletes();
         });
@@ -676,6 +677,7 @@ return new class extends Migration
     {
         Schema::create('programs', function (Blueprint $table) {
             $table->id();
+            // For Refinery Record purposes
             $table->foreignId('refinery_id')->constrained('refineries')->onDelete('cascade');
             $table->foreignId('marketer_id')->constrained('marketers')->onDelete('cascade');
             $table->foreignId('purchase_id')->constrained('purchases')->onDelete('cascade');

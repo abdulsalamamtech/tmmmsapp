@@ -12,15 +12,15 @@ use Illuminate\Http\Request;
 class PurchaseController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Marketer: Display a listing of the resource.
      */
     public function index()
     {
         // For testing purposes
         // $test = $this->createRandomData();
-
+        $marketer_id = 1;
         // Fetch all product types from the database
-        $purchases = Purchase::where('marketer_id', 1)
+        $purchases = Purchase::where('marketer_id', $marketer_id)
             ->latest()
             ->paginate();
         // Add metadata to the response
@@ -33,14 +33,16 @@ class PurchaseController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Marketer: Store a newly created resource in storage.
      */
     public function store(PurchaseRequest $request)
     {
+        $data = $request->validated();
+
         // for testing purposes
         $data['added_by'] = request()?->user()?->id ?? 1;
         $purchase = Purchase::create($data);
-        return ApiResponse::success($purchase, 'purchase type created', 201);        
+        return ApiResponse::success($purchase, 'purchase created', 201);        
     }
 
     /**
@@ -48,7 +50,15 @@ class PurchaseController extends Controller
      */
     public function show(Purchase $purchase)
     {
-        return ApiResponse::success($purchase, 'purchase type created', 201);        
+        $marketer_id = 1;
+        $purchase = Purchase::where('marketer_id', $marketer_id)
+        ->where('id', $purchase->id);
+
+        // Check if the purchase exists
+        if (!$purchase) {
+            return ApiResponse::error([], 'purchase not found', 404);
+        }
+        return ApiResponse::success($purchase, 'purchase created', 201);        
 
     }
 
@@ -60,7 +70,7 @@ class PurchaseController extends Controller
         $data = $request->validated();
         $purchase->update($data);
 
-        $product_type = new PurchaseResource($purchase);
+        $purchase = new PurchaseResource($purchase);
         return ApiResponse::success($purchase, 'purchase updated', 200);
     }
 

@@ -27,5 +27,12 @@ class PurchaseRequest extends FormRequest
             'added_by' => ['required','integer','exists:users,id'],
             'comment' => ['nullable','string','max:255']
         ];
+
+        'refinery_id',
+        'marketer_id',
+        'product_id',
+        'pfi_number',
+        'amount',
+        'liters'
     }
 }

@@ -13,6 +13,8 @@ return new class extends Migration
     {
         Schema::create('programs', function (Blueprint $table) {
             $table->id();
+            // For Refinery Record purposes
+            $table->foreignId('refinery_id')->constrained('refineries')->onDelete('cascade');
             $table->foreignId('marketer_id')->constrained('marketers')->onDelete('cascade');
             $table->foreignId('purchase_id')->constrained('purchases')->onDelete('cascade');
             $table->decimal('liters', 15, 2);

@@ -16,8 +16,11 @@ class ProgramController extends Controller
      */
     public function index()
     {
+        $marketer_id = 1;
         // Fetch all product types from the database
-        $programs = Program::where('status', 'active')->latest()->paginate();
+        $programs = Program::where('marketer_id', $marketer_id)
+            ->latest()
+            ->paginate();
         // Add metadata to the response
         $metadata = $programs;
         // Transform the items
@@ -38,6 +41,12 @@ class ProgramController extends Controller
         // for testing purposes
         $data['added_by'] = request()?->user()?->id ?? 1;
         $data['marketer_id'] = request()?->user()?->id ?? 1;
+
+        // Get refinery information from purchase information
+        $purchase_id = $data['purchase_id'];
+        $purchase = \App\Models\Api\Purchase::find($purchase_id);
+        // Set the refinery_id in the program data
+        $data['refinery_id'] = $purchase->refinery_id;
 
         $program = Program::create($data);
         return ApiResponse::success($program, 'program created', 201);

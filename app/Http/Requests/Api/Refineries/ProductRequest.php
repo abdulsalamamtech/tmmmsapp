@@ -25,9 +25,6 @@ class ProductRequest extends FormRequest
             'product_type_id' => ['required','integer','exists:product_types,id'],
             'price' => ['required','numeric'],
             'status' => ['required','in:active,pending'],
-            // 'refinery_id' => ['required','integer','exists:refineries,id'],
-            // 'added_by' => ['required','integer','exists:users,id'],
-            // 'image' => ['nullable','image','mimes:jpeg,png,jpg']
         ];
     }
 }

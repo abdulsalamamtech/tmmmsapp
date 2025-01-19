@@ -24,6 +24,15 @@ class ProgramRequest extends FormRequest
         return [
             'liters' => ['required', 'integer'],
             'purchase_id' => ['required','integer','exists:purchases,id'],
+            // 'pending', 'approved', 'rejected', 'completed'
+            'status' => ['nullable','in:pending,completed'],
         ];
+    }
+
+    protected function prepareForValidation()
+    {  
+        $this->merge([  
+            'status' => $this->status ?? 'pending',  
+        ]);
     }
 }
