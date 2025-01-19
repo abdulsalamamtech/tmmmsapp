@@ -28,11 +28,5 @@ class PurchaseRequest extends FormRequest
             'comment' => ['nullable','string','max:255']
         ];
 
-        'refinery_id',
-        'marketer_id',
-        'product_id',
-        'pfi_number',
-        'amount',
-        'liters'
     }
 }
