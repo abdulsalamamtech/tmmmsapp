@@ -15,7 +15,8 @@ Route::prefix('refineries')->group(function () {
     Route::apiResource('products', ProductController::class);
 
     // Purchases
-    Route::apiResource('purchases', PurchaseController::class);
+    Route::apiResource('purchases', PurchaseController::class)
+        ->except(['destroy', 'store']);
 
 
     // Purchases

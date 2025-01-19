@@ -73,11 +73,5 @@ class PurchaseController extends Controller
         return ApiResponse::success($purchase, 'purchase updated', 200);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
-    }
+
 }
